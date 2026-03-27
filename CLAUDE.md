@@ -46,6 +46,13 @@ After modifying any `@freezed` or `@riverpod` annotated class:
 dart run build_runner build --delete-conflicting-outputs
 ```
 
+### MCP Servers Available
+
+Two MCP servers are relevant when working on this project:
+
+- **dart-mcp-server** — Connects to Dart/Flutter dev tools and running apps. Can analyze code, format, fix, manage packages, list devices, launch/stop apps, hot reload/restart, get app logs, runtime errors, widget tree, and run tests. Prefer this over raw shell commands for Dart/Flutter tooling.
+- **qdexcode-devtools** — Embedded MCP server in the app itself (debug mode only, localhost:9731). Provides live app state inspection, screenshots, navigation control, and provider management. See the "Embedded Dev MCP Server" section below for full details.
+
 ## Project Structure
 
 ```
