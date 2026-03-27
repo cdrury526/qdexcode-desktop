@@ -53,7 +53,7 @@ class HttpTransport implements Transport {
   @override
   Future<void> send(String message) async {
     if (_closed) {
-      throw TransportException('Transport is closed');
+      throw const TransportException('Transport is closed');
     }
 
     // Strip null values from JSON responses — some MCP clients (Claude Code)
