@@ -69,7 +69,7 @@ Future<String> _handleScreen(
 
   final completer = Completer<String>();
 
-  WidgetsBinding.instance.addPostFrameCallback((_) async {
+  Future.microtask(() async {
     try {
       // Find the root RenderRepaintBoundary from the context.
       final renderObject = context.findRenderObject();
@@ -140,7 +140,7 @@ Future<String> _handleScreenWidget(
 
   final completer = Completer<String>();
 
-  WidgetsBinding.instance.addPostFrameCallback((_) async {
+  Future.microtask(() async {
     try {
       // Walk the Element tree to find the named widget.
       final targetRenderObject = _findWidgetRenderObject(

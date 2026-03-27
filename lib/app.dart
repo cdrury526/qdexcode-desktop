@@ -62,6 +62,7 @@ class _QdexcodeAppState extends ConsumerState<QdexcodeApp>
           ProviderScope.containerOf(context, listen: false),
       routerProvider: () => ref.read(routerProvider),
       dioProvider: () => ref.read(apiClientProvider),
+      contextProvider: () => mounted ? context : null,
     );
     _devtoolsServer!.start();
   }

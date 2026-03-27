@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:qdexcode_desktop/core/state/window_state_provider.dart';
 import 'package:qdexcode_desktop/features/dashboard/dashboard_page.dart';
 import 'package:qdexcode_desktop/features/plans/plan_detail_view.dart';
 import 'package:qdexcode_desktop/features/plans/plan_list_provider.dart';
@@ -30,21 +31,28 @@ class CenterPanel extends ConsumerStatefulWidget {
 }
 
 class _CenterPanelState extends ConsumerState<CenterPanel> {
-  int _selectedIndex = 0;
-
   @override
   Widget build(BuildContext context) {
+    final activeTabId = ref.watch(activeTabStateProvider);
+    final selectedIndex = kDefaultWorkspaceTabs
+        .indexWhere((tab) => tab.id == activeTabId)
+        .clamp(0, kDefaultWorkspaceTabs.length - 1);
+
     return Column(
       children: [
         WorkspaceTabBar(
           tabs: kDefaultWorkspaceTabs,
-          selectedIndex: _selectedIndex,
-          onTabSelected: (index) => setState(() => _selectedIndex = index),
+          selectedIndex: selectedIndex,
+          onTabSelected: (index) {
+            ref.read(activeTabStateProvider.notifier).setTab(
+                  kDefaultWorkspaceTabs[index].id,
+                );
+          },
         ),
         Expanded(
           child: AnimatedSwitcher(
             duration: const Duration(milliseconds: 200),
-            child: _buildTabContent(_selectedIndex),
+            child: _buildTabContent(selectedIndex),
           ),
         ),
       ],

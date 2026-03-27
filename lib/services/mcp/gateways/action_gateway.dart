@@ -87,7 +87,9 @@ Future<String> _handleNavigate(
 
     final completer = Completer<String>();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    // Use scheduleMicrotask to dispatch on the event loop without
+    // waiting for a frame (addPostFrameCallback deadlocks when idle).
+    Future.microtask(() {
       try {
         router.go(route);
         completer.complete(jsonEncode({
@@ -157,7 +159,7 @@ Future<String> _handleSwitchTab(
 
     final completer = Completer<String>();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    Future.microtask(() {
       try {
         container.read(activeTabStateProvider.notifier).setTab(tabId);
         completer.complete(jsonEncode({
@@ -287,7 +289,7 @@ Future<String> _handleLogout(
 
     final completer = Completer<String>();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
+    Future.microtask(() async {
       try {
         await container.read(authProvider.notifier).logout();
         completer.complete(jsonEncode({
