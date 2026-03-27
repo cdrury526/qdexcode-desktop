@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:window_manager/window_manager.dart';
 
+import 'package:qdexcode_desktop/core/api/api_client.dart';
 import 'package:qdexcode_desktop/core/auth/auth_provider.dart';
 import 'package:qdexcode_desktop/core/router/app_router.dart';
 import 'package:qdexcode_desktop/core/state/window_state_provider.dart';
@@ -11,6 +13,7 @@ import 'package:qdexcode_desktop/core/state/window_state_service.dart';
 import 'package:qdexcode_desktop/core/theme/app_theme.dart';
 import 'package:qdexcode_desktop/core/theme/theme_provider.dart';
 import 'package:qdexcode_desktop/core/widgets/splash_screen.dart';
+import 'package:qdexcode_desktop/services/devtools_server.dart';
 
 /// Root application widget.
 ///
@@ -29,6 +32,9 @@ class _QdexcodeAppState extends ConsumerState<QdexcodeApp>
   /// Completer that resolves once the initial auth check finishes.
   final Completer<void> _initCompleter = Completer<void>();
 
+  /// Embedded MCP devtools server — debug mode only.
+  DevtoolsServer? _devtoolsServer;
+
   @override
   WidgetRef get windowRef => ref;
 
@@ -37,12 +43,27 @@ class _QdexcodeAppState extends ConsumerState<QdexcodeApp>
     super.initState();
     _runInitialization();
     initWindowListener();
+    _startDevtoolsServer();
   }
 
   @override
   void dispose() {
+    _devtoolsServer?.stop();
     disposeWindowListener();
     super.dispose();
+  }
+
+  /// Start the embedded MCP devtools server in debug mode only.
+  void _startDevtoolsServer() {
+    if (!kDebugMode) return;
+
+    _devtoolsServer = DevtoolsServer(
+      containerProvider: () =>
+          ProviderScope.containerOf(context, listen: false),
+      routerProvider: () => ref.read(routerProvider),
+      dioProvider: () => ref.read(apiClientProvider),
+    );
+    _devtoolsServer!.start();
   }
 
   Future<void> _runInitialization() async {

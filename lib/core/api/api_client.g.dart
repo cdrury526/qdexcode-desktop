@@ -6,7 +6,7 @@ part of 'api_client.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$apiClientHash() => r'c2e059d43c293fd9824fa9f61b9cfe3d34905210';
+String _$apiClientHash() => r'0ca3a64b63f64a92c45c9f3653155801863144fe';
 
 /// Provides the configured [Dio] instance for all API calls.
 ///

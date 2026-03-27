@@ -54,6 +54,10 @@ dependencies:
       url: https://github.com/cdrury526/dart_xterm.git
       ref: master
 
+  # MCP SDK for embedded devtools server
+  dart_mcp:
+    path: /Users/chrisdrury/projects/DEV_RAG/dart_mcp
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

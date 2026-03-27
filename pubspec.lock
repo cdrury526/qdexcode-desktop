@@ -241,6 +241,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0+7.7.0"
+  dart_mcp:
+    dependency: "direct main"
+    description:
+      path: "/Users/chrisdrury/projects/DEV_RAG/dart_mcp"
+      relative: false
+    source: path
+    version: "1.0.0"
   dart_pty:
     dependency: "direct main"
     description:

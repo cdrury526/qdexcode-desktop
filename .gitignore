@@ -1,3 +1,6 @@
+# MCP server config (localhost-specific)
+.mcp.json
+
 # Miscellaneous
 *.class
 *.log
