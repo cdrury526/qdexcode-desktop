@@ -10,6 +10,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io' show Process;
 
+import 'package:flutter/foundation.dart';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -149,7 +151,11 @@ class AuthService {
     FlutterSecureStorage? secureStorage,
     String? baseUrl,
   })  : _dio = dio ?? Dio(BaseOptions(baseUrl: baseUrl ?? _kBaseUrl)),
-        _secureStorage = secureStorage ?? const FlutterSecureStorage();
+        _secureStorage = secureStorage ?? const FlutterSecureStorage(
+              mOptions: MacOsOptions(
+                useDataProtectionKeyChain: true,
+              ),
+            );
 
   final Dio _dio;
   final FlutterSecureStorage _secureStorage;
@@ -292,6 +298,14 @@ class AuthService {
         if (!cancelled) {
           pollTimer = Timer(effectiveInterval, poll);
         }
+      } catch (e) {
+        // Catch-all for non-Dio errors (e.g., secure storage failures).
+        debugPrint('[AuthService] poll error: $e');
+        controller.add(DeviceFlowUpdate(
+          status: DeviceFlowStatus.error,
+          errorMessage: 'Unexpected error: $e',
+        ));
+        await controller.close();
       }
     }
 
@@ -314,12 +328,12 @@ class AuthService {
 
   // -- Session validation --------------------------------------------------
 
-  /// Validate a token by calling GET /api/auth/session with a Bearer header.
+  /// Validate a token by calling GET /api/auth/me with a Bearer header.
   ///
-  /// Returns the session response map on success, or throws on failure.
+  /// Returns the response map on success ({user, orgId}), or throws on failure.
   Future<Map<String, dynamic>> validateSession(String token) async {
     final response = await _dio.get<Map<String, dynamic>>(
-      '/api/auth/session',
+      '/api/auth/me',
       options: Options(
         headers: {'Authorization': 'Bearer $token'},
       ),

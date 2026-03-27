@@ -106,13 +106,12 @@ class Auth extends _$Auth {
       }
 
       // Validate the stored token against the server.
-      final sessionData = await service.validateSession(token);
-      final user = _parseUserFromSession(sessionData);
+      final meData = await service.validateSession(token);
+      final user = _parseUserFromMe(meData);
 
       if (user != null) {
         state = AuthAuthenticated(user: user, token: token);
       } else {
-        // Token is valid but response is missing user data — clear it.
         await service.deleteToken();
         state = const AuthUnauthenticated();
       }
@@ -159,12 +158,12 @@ class Auth extends _$Auth {
 
             case DeviceFlowStatus.approved:
               final tokenResponse = update.tokenResponse!;
-              // Validate and get full user info from session endpoint.
+              // Validate the token and get user info from /api/auth/me.
               try {
-                final sessionData = await service.validateSession(
+                final meData = await service.validateSession(
                   tokenResponse.accessToken,
                 );
-                final user = _parseUserFromSession(sessionData);
+                final user = _parseUserFromMe(meData);
                 if (user != null) {
                   state = AuthAuthenticated(
                     user: user,
@@ -172,7 +171,7 @@ class Auth extends _$Auth {
                   );
                 } else {
                   state = const AuthUnauthenticated(
-                    error: 'Session missing user data',
+                    error: 'Response missing user data',
                   );
                 }
               } on Exception catch (e) {
@@ -214,16 +213,13 @@ class Auth extends _$Auth {
     state = const AuthUnauthenticated();
   }
 
-  /// Parse user info from the /api/auth/session response.
+  /// Parse user info from the /api/auth/me response.
   ///
-  /// The session endpoint returns:
+  /// The endpoint returns:
   /// ```json
-  /// {
-  ///   "session": { "activeOrganizationId": "..." },
-  ///   "user": { "id": "...", "name": "...", "email": "...", ... }
-  /// }
+  /// { "user": { "id": "...", "name": "...", "email": "...", "image": "..." }, "orgId": "..." }
   /// ```
-  User? _parseUserFromSession(Map<String, dynamic> data) {
+  User? _parseUserFromMe(Map<String, dynamic> data) {
     final userData = data['user'] as Map<String, dynamic>?;
     if (userData == null || userData['id'] == null) return null;
 
@@ -231,14 +227,10 @@ class Auth extends _$Auth {
       id: userData['id'] as String,
       name: userData['name'] as String? ?? '',
       email: userData['email'] as String? ?? '',
-      emailVerified: userData['emailVerified'] as bool? ?? false,
+      emailVerified: true,
       image: userData['image'] as String?,
-      createdAt: userData['createdAt'] != null
-          ? DateTime.parse(userData['createdAt'] as String)
-          : DateTime.now(),
-      updatedAt: userData['updatedAt'] != null
-          ? DateTime.parse(userData['updatedAt'] as String)
-          : DateTime.now(),
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
     );
   }
 }

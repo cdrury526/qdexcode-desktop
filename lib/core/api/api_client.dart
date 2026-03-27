@@ -34,7 +34,11 @@ Dio apiClient(Ref ref) {
     ),
   );
 
-  const secureStorage = FlutterSecureStorage();
+  const secureStorage = FlutterSecureStorage(
+    mOptions: MacOsOptions(
+      useDataProtectionKeyChain: true,
+    ),
+  );
 
   dio.interceptors.add(
     InterceptorsWrapper(
