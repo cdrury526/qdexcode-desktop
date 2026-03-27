@@ -145,42 +145,43 @@ class _SplashContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ColoredBox(
-      color: _background,
-      child: Center(
-        child: AnimatedBuilder(
-          animation: animation,
-          builder: (context, child) {
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Logo / wordmark
-                Opacity(
-                  opacity: logoFadeIn.value,
-                  child: Transform.translate(
-                    offset: Offset(0, 8 * (1 - logoFadeIn.value)),
-                    child: const _Wordmark(),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                // Tagline
-                Opacity(
-                  opacity: subtitleFadeIn.value,
-                  child: const Text(
-                    'Code Intelligence Platform',
-                    style: TextStyle(
-                      fontFamily: 'Inter',
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: _mutedForeground,
-                      decoration: TextDecoration.none,
-                      letterSpacing: 0.5,
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: ColoredBox(
+        color: _background,
+        child: Center(
+          child: AnimatedBuilder(
+            animation: animation,
+            builder: (context, child) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Opacity(
+                    opacity: logoFadeIn.value,
+                    child: Transform.translate(
+                      offset: Offset(0, 8 * (1 - logoFadeIn.value)),
+                      child: const _Wordmark(),
                     ),
                   ),
-                ),
-              ],
-            );
-          },
+                  const SizedBox(height: 16),
+                  Opacity(
+                    opacity: subtitleFadeIn.value,
+                    child: const Text(
+                      'Code Intelligence Platform',
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: _mutedForeground,
+                        decoration: TextDecoration.none,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
         ),
       ),
     );
