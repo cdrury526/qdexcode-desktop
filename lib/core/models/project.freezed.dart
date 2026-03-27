@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Project {
 
- String get id;@JsonKey(name: 'organization_id') String get organizationId; String get name;@JsonKey(name: 'clone_url') String get cloneUrl;@JsonKey(name: 'default_branch') String get defaultBranch;@JsonKey(name: 'last_indexed_commit_sha') String? get lastIndexedCommitSha;@JsonKey(name: 'index_status') IndexStatus get indexStatus;@JsonKey(name: 'dirty_flag') bool get dirtyFlag;@JsonKey(name: 'webhook_id') String? get webhookId;@JsonKey(name: 'webhook_secret') String? get webhookSecret;@JsonKey(name: 'webhook_status') WebhookStatus get webhookStatus;@JsonKey(name: 'local_path') String? get localPath;@JsonKey(name: 'created_at') DateTime get createdAt;@JsonKey(name: 'updated_at') DateTime get updatedAt;
+ String get id; String get organizationId; String get name; String get cloneUrl; String get defaultBranch; String? get lastIndexedCommitSha; IndexStatus get indexStatus; bool get dirtyFlag; String? get webhookId; String? get webhookSecret; WebhookStatus get webhookStatus; String? get localPath; DateTime get createdAt; DateTime get updatedAt;
 /// Create a copy of Project
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $ProjectCopyWith<$Res>  {
   factory $ProjectCopyWith(Project value, $Res Function(Project) _then) = _$ProjectCopyWithImpl;
 @useResult
 $Res call({
- String id,@JsonKey(name: 'organization_id') String organizationId, String name,@JsonKey(name: 'clone_url') String cloneUrl,@JsonKey(name: 'default_branch') String defaultBranch,@JsonKey(name: 'last_indexed_commit_sha') String? lastIndexedCommitSha,@JsonKey(name: 'index_status') IndexStatus indexStatus,@JsonKey(name: 'dirty_flag') bool dirtyFlag,@JsonKey(name: 'webhook_id') String? webhookId,@JsonKey(name: 'webhook_secret') String? webhookSecret,@JsonKey(name: 'webhook_status') WebhookStatus webhookStatus,@JsonKey(name: 'local_path') String? localPath,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
+ String id, String organizationId, String name, String cloneUrl, String defaultBranch, String? lastIndexedCommitSha, IndexStatus indexStatus, bool dirtyFlag, String? webhookId, String? webhookSecret, WebhookStatus webhookStatus, String? localPath, DateTime createdAt, DateTime updatedAt
 });
 
 
@@ -166,7 +166,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'organization_id')  String organizationId,  String name, @JsonKey(name: 'clone_url')  String cloneUrl, @JsonKey(name: 'default_branch')  String defaultBranch, @JsonKey(name: 'last_indexed_commit_sha')  String? lastIndexedCommitSha, @JsonKey(name: 'index_status')  IndexStatus indexStatus, @JsonKey(name: 'dirty_flag')  bool dirtyFlag, @JsonKey(name: 'webhook_id')  String? webhookId, @JsonKey(name: 'webhook_secret')  String? webhookSecret, @JsonKey(name: 'webhook_status')  WebhookStatus webhookStatus, @JsonKey(name: 'local_path')  String? localPath, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String organizationId,  String name,  String cloneUrl,  String defaultBranch,  String? lastIndexedCommitSha,  IndexStatus indexStatus,  bool dirtyFlag,  String? webhookId,  String? webhookSecret,  WebhookStatus webhookStatus,  String? localPath,  DateTime createdAt,  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Project() when $default != null:
 return $default(_that.id,_that.organizationId,_that.name,_that.cloneUrl,_that.defaultBranch,_that.lastIndexedCommitSha,_that.indexStatus,_that.dirtyFlag,_that.webhookId,_that.webhookSecret,_that.webhookStatus,_that.localPath,_that.createdAt,_that.updatedAt);case _:
@@ -187,7 +187,7 @@ return $default(_that.id,_that.organizationId,_that.name,_that.cloneUrl,_that.de
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'organization_id')  String organizationId,  String name, @JsonKey(name: 'clone_url')  String cloneUrl, @JsonKey(name: 'default_branch')  String defaultBranch, @JsonKey(name: 'last_indexed_commit_sha')  String? lastIndexedCommitSha, @JsonKey(name: 'index_status')  IndexStatus indexStatus, @JsonKey(name: 'dirty_flag')  bool dirtyFlag, @JsonKey(name: 'webhook_id')  String? webhookId, @JsonKey(name: 'webhook_secret')  String? webhookSecret, @JsonKey(name: 'webhook_status')  WebhookStatus webhookStatus, @JsonKey(name: 'local_path')  String? localPath, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String organizationId,  String name,  String cloneUrl,  String defaultBranch,  String? lastIndexedCommitSha,  IndexStatus indexStatus,  bool dirtyFlag,  String? webhookId,  String? webhookSecret,  WebhookStatus webhookStatus,  String? localPath,  DateTime createdAt,  DateTime updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _Project():
 return $default(_that.id,_that.organizationId,_that.name,_that.cloneUrl,_that.defaultBranch,_that.lastIndexedCommitSha,_that.indexStatus,_that.dirtyFlag,_that.webhookId,_that.webhookSecret,_that.webhookStatus,_that.localPath,_that.createdAt,_that.updatedAt);case _:
@@ -207,7 +207,7 @@ return $default(_that.id,_that.organizationId,_that.name,_that.cloneUrl,_that.de
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'organization_id')  String organizationId,  String name, @JsonKey(name: 'clone_url')  String cloneUrl, @JsonKey(name: 'default_branch')  String defaultBranch, @JsonKey(name: 'last_indexed_commit_sha')  String? lastIndexedCommitSha, @JsonKey(name: 'index_status')  IndexStatus indexStatus, @JsonKey(name: 'dirty_flag')  bool dirtyFlag, @JsonKey(name: 'webhook_id')  String? webhookId, @JsonKey(name: 'webhook_secret')  String? webhookSecret, @JsonKey(name: 'webhook_status')  WebhookStatus webhookStatus, @JsonKey(name: 'local_path')  String? localPath, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String organizationId,  String name,  String cloneUrl,  String defaultBranch,  String? lastIndexedCommitSha,  IndexStatus indexStatus,  bool dirtyFlag,  String? webhookId,  String? webhookSecret,  WebhookStatus webhookStatus,  String? localPath,  DateTime createdAt,  DateTime updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _Project() when $default != null:
 return $default(_that.id,_that.organizationId,_that.name,_that.cloneUrl,_that.defaultBranch,_that.lastIndexedCommitSha,_that.indexStatus,_that.dirtyFlag,_that.webhookId,_that.webhookSecret,_that.webhookStatus,_that.localPath,_that.createdAt,_that.updatedAt);case _:
@@ -222,23 +222,23 @@ return $default(_that.id,_that.organizationId,_that.name,_that.cloneUrl,_that.de
 @JsonSerializable()
 
 class _Project implements Project {
-  const _Project({required this.id, @JsonKey(name: 'organization_id') required this.organizationId, required this.name, @JsonKey(name: 'clone_url') required this.cloneUrl, @JsonKey(name: 'default_branch') this.defaultBranch = 'main', @JsonKey(name: 'last_indexed_commit_sha') this.lastIndexedCommitSha, @JsonKey(name: 'index_status') this.indexStatus = IndexStatus.idle, @JsonKey(name: 'dirty_flag') this.dirtyFlag = false, @JsonKey(name: 'webhook_id') this.webhookId, @JsonKey(name: 'webhook_secret') this.webhookSecret, @JsonKey(name: 'webhook_status') this.webhookStatus = WebhookStatus.none, @JsonKey(name: 'local_path') this.localPath, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt});
+  const _Project({required this.id, required this.organizationId, required this.name, required this.cloneUrl, this.defaultBranch = 'main', this.lastIndexedCommitSha, this.indexStatus = IndexStatus.idle, this.dirtyFlag = false, this.webhookId, this.webhookSecret, this.webhookStatus = WebhookStatus.none, this.localPath, required this.createdAt, required this.updatedAt});
   factory _Project.fromJson(Map<String, dynamic> json) => _$ProjectFromJson(json);
 
 @override final  String id;
-@override@JsonKey(name: 'organization_id') final  String organizationId;
+@override final  String organizationId;
 @override final  String name;
-@override@JsonKey(name: 'clone_url') final  String cloneUrl;
-@override@JsonKey(name: 'default_branch') final  String defaultBranch;
-@override@JsonKey(name: 'last_indexed_commit_sha') final  String? lastIndexedCommitSha;
-@override@JsonKey(name: 'index_status') final  IndexStatus indexStatus;
-@override@JsonKey(name: 'dirty_flag') final  bool dirtyFlag;
-@override@JsonKey(name: 'webhook_id') final  String? webhookId;
-@override@JsonKey(name: 'webhook_secret') final  String? webhookSecret;
-@override@JsonKey(name: 'webhook_status') final  WebhookStatus webhookStatus;
-@override@JsonKey(name: 'local_path') final  String? localPath;
-@override@JsonKey(name: 'created_at') final  DateTime createdAt;
-@override@JsonKey(name: 'updated_at') final  DateTime updatedAt;
+@override final  String cloneUrl;
+@override@JsonKey() final  String defaultBranch;
+@override final  String? lastIndexedCommitSha;
+@override@JsonKey() final  IndexStatus indexStatus;
+@override@JsonKey() final  bool dirtyFlag;
+@override final  String? webhookId;
+@override final  String? webhookSecret;
+@override@JsonKey() final  WebhookStatus webhookStatus;
+@override final  String? localPath;
+@override final  DateTime createdAt;
+@override final  DateTime updatedAt;
 
 /// Create a copy of Project
 /// with the given fields replaced by the non-null parameter values.
@@ -273,7 +273,7 @@ abstract mixin class _$ProjectCopyWith<$Res> implements $ProjectCopyWith<$Res> {
   factory _$ProjectCopyWith(_Project value, $Res Function(_Project) _then) = __$ProjectCopyWithImpl;
 @override @useResult
 $Res call({
- String id,@JsonKey(name: 'organization_id') String organizationId, String name,@JsonKey(name: 'clone_url') String cloneUrl,@JsonKey(name: 'default_branch') String defaultBranch,@JsonKey(name: 'last_indexed_commit_sha') String? lastIndexedCommitSha,@JsonKey(name: 'index_status') IndexStatus indexStatus,@JsonKey(name: 'dirty_flag') bool dirtyFlag,@JsonKey(name: 'webhook_id') String? webhookId,@JsonKey(name: 'webhook_secret') String? webhookSecret,@JsonKey(name: 'webhook_status') WebhookStatus webhookStatus,@JsonKey(name: 'local_path') String? localPath,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
+ String id, String organizationId, String name, String cloneUrl, String defaultBranch, String? lastIndexedCommitSha, IndexStatus indexStatus, bool dirtyFlag, String? webhookId, String? webhookSecret, WebhookStatus webhookStatus, String? localPath, DateTime createdAt, DateTime updatedAt
 });
 
 

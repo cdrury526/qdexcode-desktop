@@ -5,6 +5,7 @@
 library;
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,9 +31,11 @@ class ProjectList extends _$ProjectList {
   Future<List<Project>> build() async {
     final dio = ref.watch(apiClientProvider);
 
-    final response = await dio.get<List<dynamic>>('/api/projects');
-    final data = response.data;
-    if (data == null) return [];
+    final response = await dio.get<dynamic>('/api/projects');
+    final raw = response.data;
+    if (raw == null) return [];
+    final data = raw is List ? raw : <dynamic>[];
+    if (data.isEmpty) return [];
 
     final projects = data
         .map((json) => Project.fromJson(json as Map<String, dynamic>))
@@ -219,12 +222,18 @@ class GitHubRepo {
 Future<List<GitHubRepo>> githubRepos(Ref ref) async {
   final dio = ref.watch(apiClientProvider);
 
-  final response = await dio.get<List<dynamic>>(
+  final response = await dio.get<dynamic>(
     '/api/github/repos',
   );
 
-  final data = response.data;
-  if (data == null) return [];
+  final raw = response.data;
+  debugPrint('[githubRepos] status=${response.statusCode} type=${raw.runtimeType} len=${raw is List ? raw.length : 'N/A'}');
+  if (raw == null) return [];
+  final data = raw is List ? raw : <dynamic>[];
+  if (data.isEmpty) {
+    debugPrint('[githubRepos] empty — raw preview: ${raw.toString().substring(0, raw.toString().length.clamp(0, 200))}');
+    return [];
+  }
 
   final repos = data
       .map((json) => GitHubRepo.fromJson(json as Map<String, dynamic>))

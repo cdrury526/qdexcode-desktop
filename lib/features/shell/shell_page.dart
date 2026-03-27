@@ -7,6 +7,7 @@ import 'package:qdexcode_desktop/core/state/window_state_service.dart';
 import 'package:qdexcode_desktop/features/shell/center_panel.dart';
 import 'package:qdexcode_desktop/features/shell/left_panel.dart';
 import 'package:qdexcode_desktop/features/shell/right_panel.dart';
+import 'package:qdexcode_desktop/features/projects/project_selector.dart';
 
 /// Minimum width constraints for each panel.
 const double kLeftPanelMinWidth = 180;
@@ -103,7 +104,9 @@ class _ShellPageState extends ConsumerState<ShellPage> {
           onDividerDragEnd: (_) => _onWeightChange(),
           builder: (context, area) {
             return switch (area.data as String) {
-              'left' => const LeftPanel(),
+              'left' => const LeftPanel(
+                projectSelector: ProjectSelector(),
+              ),
               'center' => const CenterPanel(),
               'right' => const RightPanel(),
               _ => const SizedBox.shrink(),

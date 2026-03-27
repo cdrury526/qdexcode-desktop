@@ -8,40 +8,40 @@ part of 'project.dart';
 
 _Project _$ProjectFromJson(Map<String, dynamic> json) => _Project(
   id: json['id'] as String,
-  organizationId: json['organization_id'] as String,
+  organizationId: json['organizationId'] as String,
   name: json['name'] as String,
-  cloneUrl: json['clone_url'] as String,
-  defaultBranch: json['default_branch'] as String? ?? 'main',
-  lastIndexedCommitSha: json['last_indexed_commit_sha'] as String?,
+  cloneUrl: json['cloneUrl'] as String,
+  defaultBranch: json['defaultBranch'] as String? ?? 'main',
+  lastIndexedCommitSha: json['lastIndexedCommitSha'] as String?,
   indexStatus:
-      $enumDecodeNullable(_$IndexStatusEnumMap, json['index_status']) ??
+      $enumDecodeNullable(_$IndexStatusEnumMap, json['indexStatus']) ??
       IndexStatus.idle,
-  dirtyFlag: json['dirty_flag'] as bool? ?? false,
-  webhookId: json['webhook_id'] as String?,
-  webhookSecret: json['webhook_secret'] as String?,
+  dirtyFlag: json['dirtyFlag'] as bool? ?? false,
+  webhookId: json['webhookId'] as String?,
+  webhookSecret: json['webhookSecret'] as String?,
   webhookStatus:
-      $enumDecodeNullable(_$WebhookStatusEnumMap, json['webhook_status']) ??
+      $enumDecodeNullable(_$WebhookStatusEnumMap, json['webhookStatus']) ??
       WebhookStatus.none,
-  localPath: json['local_path'] as String?,
-  createdAt: DateTime.parse(json['created_at'] as String),
-  updatedAt: DateTime.parse(json['updated_at'] as String),
+  localPath: json['localPath'] as String?,
+  createdAt: DateTime.parse(json['createdAt'] as String),
+  updatedAt: DateTime.parse(json['updatedAt'] as String),
 );
 
 Map<String, dynamic> _$ProjectToJson(_Project instance) => <String, dynamic>{
   'id': instance.id,
-  'organization_id': instance.organizationId,
+  'organizationId': instance.organizationId,
   'name': instance.name,
-  'clone_url': instance.cloneUrl,
-  'default_branch': instance.defaultBranch,
-  'last_indexed_commit_sha': instance.lastIndexedCommitSha,
-  'index_status': _$IndexStatusEnumMap[instance.indexStatus]!,
-  'dirty_flag': instance.dirtyFlag,
-  'webhook_id': instance.webhookId,
-  'webhook_secret': instance.webhookSecret,
-  'webhook_status': _$WebhookStatusEnumMap[instance.webhookStatus]!,
-  'local_path': instance.localPath,
-  'created_at': instance.createdAt.toIso8601String(),
-  'updated_at': instance.updatedAt.toIso8601String(),
+  'cloneUrl': instance.cloneUrl,
+  'defaultBranch': instance.defaultBranch,
+  'lastIndexedCommitSha': instance.lastIndexedCommitSha,
+  'indexStatus': _$IndexStatusEnumMap[instance.indexStatus]!,
+  'dirtyFlag': instance.dirtyFlag,
+  'webhookId': instance.webhookId,
+  'webhookSecret': instance.webhookSecret,
+  'webhookStatus': _$WebhookStatusEnumMap[instance.webhookStatus]!,
+  'localPath': instance.localPath,
+  'createdAt': instance.createdAt.toIso8601String(),
+  'updatedAt': instance.updatedAt.toIso8601String(),
 };
 
 const _$IndexStatusEnumMap = {

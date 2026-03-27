@@ -30,19 +30,19 @@ enum WebhookStatus {
 abstract class Project with _$Project {
   const factory Project({
     required String id,
-    @JsonKey(name: 'organization_id') required String organizationId,
+    required String organizationId,
     required String name,
-    @JsonKey(name: 'clone_url') required String cloneUrl,
-    @JsonKey(name: 'default_branch') @Default('main') String defaultBranch,
-    @JsonKey(name: 'last_indexed_commit_sha') String? lastIndexedCommitSha,
-    @JsonKey(name: 'index_status') @Default(IndexStatus.idle) IndexStatus indexStatus,
-    @JsonKey(name: 'dirty_flag') @Default(false) bool dirtyFlag,
-    @JsonKey(name: 'webhook_id') String? webhookId,
-    @JsonKey(name: 'webhook_secret') String? webhookSecret,
-    @JsonKey(name: 'webhook_status') @Default(WebhookStatus.none) WebhookStatus webhookStatus,
-    @JsonKey(name: 'local_path') String? localPath,
-    @JsonKey(name: 'created_at') required DateTime createdAt,
-    @JsonKey(name: 'updated_at') required DateTime updatedAt,
+    required String cloneUrl,
+    @Default('main') String defaultBranch,
+    String? lastIndexedCommitSha,
+    @Default(IndexStatus.idle) IndexStatus indexStatus,
+    @Default(false) bool dirtyFlag,
+    String? webhookId,
+    String? webhookSecret,
+    @Default(WebhookStatus.none) WebhookStatus webhookStatus,
+    String? localPath,
+    required DateTime createdAt,
+    required DateTime updatedAt,
   }) = _Project;
 
   factory Project.fromJson(Map<String, dynamic> json) =>
