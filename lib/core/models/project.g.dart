@@ -22,6 +22,7 @@ _Project _$ProjectFromJson(Map<String, dynamic> json) => _Project(
   webhookStatus:
       $enumDecodeNullable(_$WebhookStatusEnumMap, json['webhook_status']) ??
       WebhookStatus.none,
+  localPath: json['local_path'] as String?,
   createdAt: DateTime.parse(json['created_at'] as String),
   updatedAt: DateTime.parse(json['updated_at'] as String),
 );
@@ -38,6 +39,7 @@ Map<String, dynamic> _$ProjectToJson(_Project instance) => <String, dynamic>{
   'webhook_id': instance.webhookId,
   'webhook_secret': instance.webhookSecret,
   'webhook_status': _$WebhookStatusEnumMap[instance.webhookStatus]!,
+  'local_path': instance.localPath,
   'created_at': instance.createdAt.toIso8601String(),
   'updated_at': instance.updatedAt.toIso8601String(),
 };

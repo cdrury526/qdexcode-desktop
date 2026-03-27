@@ -6,14 +6,20 @@ part of 'app_router.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$routerHash() => r'7154f1b5bca163df49b0d7a1f18d6c248e29be50';
+String _$routerHash() => r'd26bfc9638f7137206783668b728d5a49351e20c';
 
 /// Provides the [GoRouter] instance for the application.
 ///
-/// Routes will be expanded as features are built:
-/// - `/login` — auth gate (Phase 1)
-/// - `/` — main 3-panel layout (Phase 2)
-/// - `/projects/:id` — project detail (Phase 3)
+/// The router handles three states:
+/// - Unauthenticated -> `/login`
+/// - Authenticated with no projects -> `/onboarding`
+/// - Authenticated with projects -> `/`
+///
+/// Routes:
+/// - `/login` -- auth gate (Phase 1)
+/// - `/onboarding` -- first-launch guided flow (Phase 2)
+/// - `/` -- main 3-panel layout (Phase 2)
+/// - `/projects/:id` -- project detail (Phase 3)
 ///
 /// Copied from [router].
 @ProviderFor(router)

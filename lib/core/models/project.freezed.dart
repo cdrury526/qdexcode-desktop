@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Project {
 
- String get id;@JsonKey(name: 'organization_id') String get organizationId; String get name;@JsonKey(name: 'clone_url') String get cloneUrl;@JsonKey(name: 'default_branch') String get defaultBranch;@JsonKey(name: 'last_indexed_commit_sha') String? get lastIndexedCommitSha;@JsonKey(name: 'index_status') IndexStatus get indexStatus;@JsonKey(name: 'dirty_flag') bool get dirtyFlag;@JsonKey(name: 'webhook_id') String? get webhookId;@JsonKey(name: 'webhook_secret') String? get webhookSecret;@JsonKey(name: 'webhook_status') WebhookStatus get webhookStatus;@JsonKey(name: 'created_at') DateTime get createdAt;@JsonKey(name: 'updated_at') DateTime get updatedAt;
+ String get id;@JsonKey(name: 'organization_id') String get organizationId; String get name;@JsonKey(name: 'clone_url') String get cloneUrl;@JsonKey(name: 'default_branch') String get defaultBranch;@JsonKey(name: 'last_indexed_commit_sha') String? get lastIndexedCommitSha;@JsonKey(name: 'index_status') IndexStatus get indexStatus;@JsonKey(name: 'dirty_flag') bool get dirtyFlag;@JsonKey(name: 'webhook_id') String? get webhookId;@JsonKey(name: 'webhook_secret') String? get webhookSecret;@JsonKey(name: 'webhook_status') WebhookStatus get webhookStatus;@JsonKey(name: 'local_path') String? get localPath;@JsonKey(name: 'created_at') DateTime get createdAt;@JsonKey(name: 'updated_at') DateTime get updatedAt;
 /// Create a copy of Project
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ProjectCopyWith<Project> get copyWith => _$ProjectCopyWithImpl<Project>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Project&&(identical(other.id, id) || other.id == id)&&(identical(other.organizationId, organizationId) || other.organizationId == organizationId)&&(identical(other.name, name) || other.name == name)&&(identical(other.cloneUrl, cloneUrl) || other.cloneUrl == cloneUrl)&&(identical(other.defaultBranch, defaultBranch) || other.defaultBranch == defaultBranch)&&(identical(other.lastIndexedCommitSha, lastIndexedCommitSha) || other.lastIndexedCommitSha == lastIndexedCommitSha)&&(identical(other.indexStatus, indexStatus) || other.indexStatus == indexStatus)&&(identical(other.dirtyFlag, dirtyFlag) || other.dirtyFlag == dirtyFlag)&&(identical(other.webhookId, webhookId) || other.webhookId == webhookId)&&(identical(other.webhookSecret, webhookSecret) || other.webhookSecret == webhookSecret)&&(identical(other.webhookStatus, webhookStatus) || other.webhookStatus == webhookStatus)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Project&&(identical(other.id, id) || other.id == id)&&(identical(other.organizationId, organizationId) || other.organizationId == organizationId)&&(identical(other.name, name) || other.name == name)&&(identical(other.cloneUrl, cloneUrl) || other.cloneUrl == cloneUrl)&&(identical(other.defaultBranch, defaultBranch) || other.defaultBranch == defaultBranch)&&(identical(other.lastIndexedCommitSha, lastIndexedCommitSha) || other.lastIndexedCommitSha == lastIndexedCommitSha)&&(identical(other.indexStatus, indexStatus) || other.indexStatus == indexStatus)&&(identical(other.dirtyFlag, dirtyFlag) || other.dirtyFlag == dirtyFlag)&&(identical(other.webhookId, webhookId) || other.webhookId == webhookId)&&(identical(other.webhookSecret, webhookSecret) || other.webhookSecret == webhookSecret)&&(identical(other.webhookStatus, webhookStatus) || other.webhookStatus == webhookStatus)&&(identical(other.localPath, localPath) || other.localPath == localPath)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,organizationId,name,cloneUrl,defaultBranch,lastIndexedCommitSha,indexStatus,dirtyFlag,webhookId,webhookSecret,webhookStatus,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,organizationId,name,cloneUrl,defaultBranch,lastIndexedCommitSha,indexStatus,dirtyFlag,webhookId,webhookSecret,webhookStatus,localPath,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'Project(id: $id, organizationId: $organizationId, name: $name, cloneUrl: $cloneUrl, defaultBranch: $defaultBranch, lastIndexedCommitSha: $lastIndexedCommitSha, indexStatus: $indexStatus, dirtyFlag: $dirtyFlag, webhookId: $webhookId, webhookSecret: $webhookSecret, webhookStatus: $webhookStatus, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'Project(id: $id, organizationId: $organizationId, name: $name, cloneUrl: $cloneUrl, defaultBranch: $defaultBranch, lastIndexedCommitSha: $lastIndexedCommitSha, indexStatus: $indexStatus, dirtyFlag: $dirtyFlag, webhookId: $webhookId, webhookSecret: $webhookSecret, webhookStatus: $webhookStatus, localPath: $localPath, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ProjectCopyWith<$Res>  {
   factory $ProjectCopyWith(Project value, $Res Function(Project) _then) = _$ProjectCopyWithImpl;
 @useResult
 $Res call({
- String id,@JsonKey(name: 'organization_id') String organizationId, String name,@JsonKey(name: 'clone_url') String cloneUrl,@JsonKey(name: 'default_branch') String defaultBranch,@JsonKey(name: 'last_indexed_commit_sha') String? lastIndexedCommitSha,@JsonKey(name: 'index_status') IndexStatus indexStatus,@JsonKey(name: 'dirty_flag') bool dirtyFlag,@JsonKey(name: 'webhook_id') String? webhookId,@JsonKey(name: 'webhook_secret') String? webhookSecret,@JsonKey(name: 'webhook_status') WebhookStatus webhookStatus,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
+ String id,@JsonKey(name: 'organization_id') String organizationId, String name,@JsonKey(name: 'clone_url') String cloneUrl,@JsonKey(name: 'default_branch') String defaultBranch,@JsonKey(name: 'last_indexed_commit_sha') String? lastIndexedCommitSha,@JsonKey(name: 'index_status') IndexStatus indexStatus,@JsonKey(name: 'dirty_flag') bool dirtyFlag,@JsonKey(name: 'webhook_id') String? webhookId,@JsonKey(name: 'webhook_secret') String? webhookSecret,@JsonKey(name: 'webhook_status') WebhookStatus webhookStatus,@JsonKey(name: 'local_path') String? localPath,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
 });
 
 
@@ -65,7 +65,7 @@ class _$ProjectCopyWithImpl<$Res>
 
 /// Create a copy of Project
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? organizationId = null,Object? name = null,Object? cloneUrl = null,Object? defaultBranch = null,Object? lastIndexedCommitSha = freezed,Object? indexStatus = null,Object? dirtyFlag = null,Object? webhookId = freezed,Object? webhookSecret = freezed,Object? webhookStatus = null,Object? createdAt = null,Object? updatedAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? organizationId = null,Object? name = null,Object? cloneUrl = null,Object? defaultBranch = null,Object? lastIndexedCommitSha = freezed,Object? indexStatus = null,Object? dirtyFlag = null,Object? webhookId = freezed,Object? webhookSecret = freezed,Object? webhookStatus = null,Object? localPath = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,organizationId: null == organizationId ? _self.organizationId : organizationId // ignore: cast_nullable_to_non_nullable
@@ -78,7 +78,8 @@ as IndexStatus,dirtyFlag: null == dirtyFlag ? _self.dirtyFlag : dirtyFlag // ign
 as bool,webhookId: freezed == webhookId ? _self.webhookId : webhookId // ignore: cast_nullable_to_non_nullable
 as String?,webhookSecret: freezed == webhookSecret ? _self.webhookSecret : webhookSecret // ignore: cast_nullable_to_non_nullable
 as String?,webhookStatus: null == webhookStatus ? _self.webhookStatus : webhookStatus // ignore: cast_nullable_to_non_nullable
-as WebhookStatus,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as WebhookStatus,localPath: freezed == localPath ? _self.localPath : localPath // ignore: cast_nullable_to_non_nullable
+as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
@@ -165,10 +166,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'organization_id')  String organizationId,  String name, @JsonKey(name: 'clone_url')  String cloneUrl, @JsonKey(name: 'default_branch')  String defaultBranch, @JsonKey(name: 'last_indexed_commit_sha')  String? lastIndexedCommitSha, @JsonKey(name: 'index_status')  IndexStatus indexStatus, @JsonKey(name: 'dirty_flag')  bool dirtyFlag, @JsonKey(name: 'webhook_id')  String? webhookId, @JsonKey(name: 'webhook_secret')  String? webhookSecret, @JsonKey(name: 'webhook_status')  WebhookStatus webhookStatus, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'organization_id')  String organizationId,  String name, @JsonKey(name: 'clone_url')  String cloneUrl, @JsonKey(name: 'default_branch')  String defaultBranch, @JsonKey(name: 'last_indexed_commit_sha')  String? lastIndexedCommitSha, @JsonKey(name: 'index_status')  IndexStatus indexStatus, @JsonKey(name: 'dirty_flag')  bool dirtyFlag, @JsonKey(name: 'webhook_id')  String? webhookId, @JsonKey(name: 'webhook_secret')  String? webhookSecret, @JsonKey(name: 'webhook_status')  WebhookStatus webhookStatus, @JsonKey(name: 'local_path')  String? localPath, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Project() when $default != null:
-return $default(_that.id,_that.organizationId,_that.name,_that.cloneUrl,_that.defaultBranch,_that.lastIndexedCommitSha,_that.indexStatus,_that.dirtyFlag,_that.webhookId,_that.webhookSecret,_that.webhookStatus,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.organizationId,_that.name,_that.cloneUrl,_that.defaultBranch,_that.lastIndexedCommitSha,_that.indexStatus,_that.dirtyFlag,_that.webhookId,_that.webhookSecret,_that.webhookStatus,_that.localPath,_that.createdAt,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -186,10 +187,10 @@ return $default(_that.id,_that.organizationId,_that.name,_that.cloneUrl,_that.de
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'organization_id')  String organizationId,  String name, @JsonKey(name: 'clone_url')  String cloneUrl, @JsonKey(name: 'default_branch')  String defaultBranch, @JsonKey(name: 'last_indexed_commit_sha')  String? lastIndexedCommitSha, @JsonKey(name: 'index_status')  IndexStatus indexStatus, @JsonKey(name: 'dirty_flag')  bool dirtyFlag, @JsonKey(name: 'webhook_id')  String? webhookId, @JsonKey(name: 'webhook_secret')  String? webhookSecret, @JsonKey(name: 'webhook_status')  WebhookStatus webhookStatus, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'organization_id')  String organizationId,  String name, @JsonKey(name: 'clone_url')  String cloneUrl, @JsonKey(name: 'default_branch')  String defaultBranch, @JsonKey(name: 'last_indexed_commit_sha')  String? lastIndexedCommitSha, @JsonKey(name: 'index_status')  IndexStatus indexStatus, @JsonKey(name: 'dirty_flag')  bool dirtyFlag, @JsonKey(name: 'webhook_id')  String? webhookId, @JsonKey(name: 'webhook_secret')  String? webhookSecret, @JsonKey(name: 'webhook_status')  WebhookStatus webhookStatus, @JsonKey(name: 'local_path')  String? localPath, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _Project():
-return $default(_that.id,_that.organizationId,_that.name,_that.cloneUrl,_that.defaultBranch,_that.lastIndexedCommitSha,_that.indexStatus,_that.dirtyFlag,_that.webhookId,_that.webhookSecret,_that.webhookStatus,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.organizationId,_that.name,_that.cloneUrl,_that.defaultBranch,_that.lastIndexedCommitSha,_that.indexStatus,_that.dirtyFlag,_that.webhookId,_that.webhookSecret,_that.webhookStatus,_that.localPath,_that.createdAt,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -206,10 +207,10 @@ return $default(_that.id,_that.organizationId,_that.name,_that.cloneUrl,_that.de
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'organization_id')  String organizationId,  String name, @JsonKey(name: 'clone_url')  String cloneUrl, @JsonKey(name: 'default_branch')  String defaultBranch, @JsonKey(name: 'last_indexed_commit_sha')  String? lastIndexedCommitSha, @JsonKey(name: 'index_status')  IndexStatus indexStatus, @JsonKey(name: 'dirty_flag')  bool dirtyFlag, @JsonKey(name: 'webhook_id')  String? webhookId, @JsonKey(name: 'webhook_secret')  String? webhookSecret, @JsonKey(name: 'webhook_status')  WebhookStatus webhookStatus, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'organization_id')  String organizationId,  String name, @JsonKey(name: 'clone_url')  String cloneUrl, @JsonKey(name: 'default_branch')  String defaultBranch, @JsonKey(name: 'last_indexed_commit_sha')  String? lastIndexedCommitSha, @JsonKey(name: 'index_status')  IndexStatus indexStatus, @JsonKey(name: 'dirty_flag')  bool dirtyFlag, @JsonKey(name: 'webhook_id')  String? webhookId, @JsonKey(name: 'webhook_secret')  String? webhookSecret, @JsonKey(name: 'webhook_status')  WebhookStatus webhookStatus, @JsonKey(name: 'local_path')  String? localPath, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _Project() when $default != null:
-return $default(_that.id,_that.organizationId,_that.name,_that.cloneUrl,_that.defaultBranch,_that.lastIndexedCommitSha,_that.indexStatus,_that.dirtyFlag,_that.webhookId,_that.webhookSecret,_that.webhookStatus,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.organizationId,_that.name,_that.cloneUrl,_that.defaultBranch,_that.lastIndexedCommitSha,_that.indexStatus,_that.dirtyFlag,_that.webhookId,_that.webhookSecret,_that.webhookStatus,_that.localPath,_that.createdAt,_that.updatedAt);case _:
   return null;
 
 }
@@ -221,7 +222,7 @@ return $default(_that.id,_that.organizationId,_that.name,_that.cloneUrl,_that.de
 @JsonSerializable()
 
 class _Project implements Project {
-  const _Project({required this.id, @JsonKey(name: 'organization_id') required this.organizationId, required this.name, @JsonKey(name: 'clone_url') required this.cloneUrl, @JsonKey(name: 'default_branch') this.defaultBranch = 'main', @JsonKey(name: 'last_indexed_commit_sha') this.lastIndexedCommitSha, @JsonKey(name: 'index_status') this.indexStatus = IndexStatus.idle, @JsonKey(name: 'dirty_flag') this.dirtyFlag = false, @JsonKey(name: 'webhook_id') this.webhookId, @JsonKey(name: 'webhook_secret') this.webhookSecret, @JsonKey(name: 'webhook_status') this.webhookStatus = WebhookStatus.none, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt});
+  const _Project({required this.id, @JsonKey(name: 'organization_id') required this.organizationId, required this.name, @JsonKey(name: 'clone_url') required this.cloneUrl, @JsonKey(name: 'default_branch') this.defaultBranch = 'main', @JsonKey(name: 'last_indexed_commit_sha') this.lastIndexedCommitSha, @JsonKey(name: 'index_status') this.indexStatus = IndexStatus.idle, @JsonKey(name: 'dirty_flag') this.dirtyFlag = false, @JsonKey(name: 'webhook_id') this.webhookId, @JsonKey(name: 'webhook_secret') this.webhookSecret, @JsonKey(name: 'webhook_status') this.webhookStatus = WebhookStatus.none, @JsonKey(name: 'local_path') this.localPath, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt});
   factory _Project.fromJson(Map<String, dynamic> json) => _$ProjectFromJson(json);
 
 @override final  String id;
@@ -235,6 +236,7 @@ class _Project implements Project {
 @override@JsonKey(name: 'webhook_id') final  String? webhookId;
 @override@JsonKey(name: 'webhook_secret') final  String? webhookSecret;
 @override@JsonKey(name: 'webhook_status') final  WebhookStatus webhookStatus;
+@override@JsonKey(name: 'local_path') final  String? localPath;
 @override@JsonKey(name: 'created_at') final  DateTime createdAt;
 @override@JsonKey(name: 'updated_at') final  DateTime updatedAt;
 
@@ -251,16 +253,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Project&&(identical(other.id, id) || other.id == id)&&(identical(other.organizationId, organizationId) || other.organizationId == organizationId)&&(identical(other.name, name) || other.name == name)&&(identical(other.cloneUrl, cloneUrl) || other.cloneUrl == cloneUrl)&&(identical(other.defaultBranch, defaultBranch) || other.defaultBranch == defaultBranch)&&(identical(other.lastIndexedCommitSha, lastIndexedCommitSha) || other.lastIndexedCommitSha == lastIndexedCommitSha)&&(identical(other.indexStatus, indexStatus) || other.indexStatus == indexStatus)&&(identical(other.dirtyFlag, dirtyFlag) || other.dirtyFlag == dirtyFlag)&&(identical(other.webhookId, webhookId) || other.webhookId == webhookId)&&(identical(other.webhookSecret, webhookSecret) || other.webhookSecret == webhookSecret)&&(identical(other.webhookStatus, webhookStatus) || other.webhookStatus == webhookStatus)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Project&&(identical(other.id, id) || other.id == id)&&(identical(other.organizationId, organizationId) || other.organizationId == organizationId)&&(identical(other.name, name) || other.name == name)&&(identical(other.cloneUrl, cloneUrl) || other.cloneUrl == cloneUrl)&&(identical(other.defaultBranch, defaultBranch) || other.defaultBranch == defaultBranch)&&(identical(other.lastIndexedCommitSha, lastIndexedCommitSha) || other.lastIndexedCommitSha == lastIndexedCommitSha)&&(identical(other.indexStatus, indexStatus) || other.indexStatus == indexStatus)&&(identical(other.dirtyFlag, dirtyFlag) || other.dirtyFlag == dirtyFlag)&&(identical(other.webhookId, webhookId) || other.webhookId == webhookId)&&(identical(other.webhookSecret, webhookSecret) || other.webhookSecret == webhookSecret)&&(identical(other.webhookStatus, webhookStatus) || other.webhookStatus == webhookStatus)&&(identical(other.localPath, localPath) || other.localPath == localPath)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,organizationId,name,cloneUrl,defaultBranch,lastIndexedCommitSha,indexStatus,dirtyFlag,webhookId,webhookSecret,webhookStatus,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,organizationId,name,cloneUrl,defaultBranch,lastIndexedCommitSha,indexStatus,dirtyFlag,webhookId,webhookSecret,webhookStatus,localPath,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'Project(id: $id, organizationId: $organizationId, name: $name, cloneUrl: $cloneUrl, defaultBranch: $defaultBranch, lastIndexedCommitSha: $lastIndexedCommitSha, indexStatus: $indexStatus, dirtyFlag: $dirtyFlag, webhookId: $webhookId, webhookSecret: $webhookSecret, webhookStatus: $webhookStatus, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'Project(id: $id, organizationId: $organizationId, name: $name, cloneUrl: $cloneUrl, defaultBranch: $defaultBranch, lastIndexedCommitSha: $lastIndexedCommitSha, indexStatus: $indexStatus, dirtyFlag: $dirtyFlag, webhookId: $webhookId, webhookSecret: $webhookSecret, webhookStatus: $webhookStatus, localPath: $localPath, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -271,7 +273,7 @@ abstract mixin class _$ProjectCopyWith<$Res> implements $ProjectCopyWith<$Res> {
   factory _$ProjectCopyWith(_Project value, $Res Function(_Project) _then) = __$ProjectCopyWithImpl;
 @override @useResult
 $Res call({
- String id,@JsonKey(name: 'organization_id') String organizationId, String name,@JsonKey(name: 'clone_url') String cloneUrl,@JsonKey(name: 'default_branch') String defaultBranch,@JsonKey(name: 'last_indexed_commit_sha') String? lastIndexedCommitSha,@JsonKey(name: 'index_status') IndexStatus indexStatus,@JsonKey(name: 'dirty_flag') bool dirtyFlag,@JsonKey(name: 'webhook_id') String? webhookId,@JsonKey(name: 'webhook_secret') String? webhookSecret,@JsonKey(name: 'webhook_status') WebhookStatus webhookStatus,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
+ String id,@JsonKey(name: 'organization_id') String organizationId, String name,@JsonKey(name: 'clone_url') String cloneUrl,@JsonKey(name: 'default_branch') String defaultBranch,@JsonKey(name: 'last_indexed_commit_sha') String? lastIndexedCommitSha,@JsonKey(name: 'index_status') IndexStatus indexStatus,@JsonKey(name: 'dirty_flag') bool dirtyFlag,@JsonKey(name: 'webhook_id') String? webhookId,@JsonKey(name: 'webhook_secret') String? webhookSecret,@JsonKey(name: 'webhook_status') WebhookStatus webhookStatus,@JsonKey(name: 'local_path') String? localPath,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
 });
 
 
@@ -288,7 +290,7 @@ class __$ProjectCopyWithImpl<$Res>
 
 /// Create a copy of Project
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? organizationId = null,Object? name = null,Object? cloneUrl = null,Object? defaultBranch = null,Object? lastIndexedCommitSha = freezed,Object? indexStatus = null,Object? dirtyFlag = null,Object? webhookId = freezed,Object? webhookSecret = freezed,Object? webhookStatus = null,Object? createdAt = null,Object? updatedAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? organizationId = null,Object? name = null,Object? cloneUrl = null,Object? defaultBranch = null,Object? lastIndexedCommitSha = freezed,Object? indexStatus = null,Object? dirtyFlag = null,Object? webhookId = freezed,Object? webhookSecret = freezed,Object? webhookStatus = null,Object? localPath = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_Project(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,organizationId: null == organizationId ? _self.organizationId : organizationId // ignore: cast_nullable_to_non_nullable
@@ -301,7 +303,8 @@ as IndexStatus,dirtyFlag: null == dirtyFlag ? _self.dirtyFlag : dirtyFlag // ign
 as bool,webhookId: freezed == webhookId ? _self.webhookId : webhookId // ignore: cast_nullable_to_non_nullable
 as String?,webhookSecret: freezed == webhookSecret ? _self.webhookSecret : webhookSecret // ignore: cast_nullable_to_non_nullable
 as String?,webhookStatus: null == webhookStatus ? _self.webhookStatus : webhookStatus // ignore: cast_nullable_to_non_nullable
-as WebhookStatus,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as WebhookStatus,localPath: freezed == localPath ? _self.localPath : localPath // ignore: cast_nullable_to_non_nullable
+as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));

@@ -40,6 +40,7 @@ abstract class Project with _$Project {
     @JsonKey(name: 'webhook_id') String? webhookId,
     @JsonKey(name: 'webhook_secret') String? webhookSecret,
     @JsonKey(name: 'webhook_status') @Default(WebhookStatus.none) WebhookStatus webhookStatus,
+    @JsonKey(name: 'local_path') String? localPath,
     @JsonKey(name: 'created_at') required DateTime createdAt,
     @JsonKey(name: 'updated_at') required DateTime updatedAt,
   }) = _Project;
