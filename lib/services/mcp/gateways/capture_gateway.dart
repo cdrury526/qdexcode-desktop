@@ -59,42 +59,56 @@ Future<String> handleCapture({
 Future<String> _handleScreen(
   BuildContext? Function() contextCallback,
 ) async {
-  final context = contextCallback();
-  if (context == null) {
-    return jsonEncode({
-      'error': 'no_context',
-      'message': 'BuildContext is not available. The app may not be mounted.',
-    });
-  }
-
   final completer = Completer<String>();
 
   Future.microtask(() async {
     try {
-      // Find the root RenderRepaintBoundary from the context.
-      final renderObject = context.findRenderObject();
-      if (renderObject == null) {
+      // Use RendererBinding to get the root render view — this avoids
+      // the RepaintBoundary search issue when context is above MaterialApp.
+      final renderViews =
+          RendererBinding.instance.renderViews.toList();
+      if (renderViews.isEmpty) {
         completer.complete(jsonEncode({
-          'error': 'no_render_object',
-          'message': 'Could not find a RenderObject from the current context.',
+          'error': 'no_render_view',
+          'message': 'No render views available.',
         }));
         return;
       }
 
-      // Walk up to find the nearest RepaintBoundary (the root is typically
-      // a RenderRepaintBoundary wrapping the entire app).
-      final boundary = _findRepaintBoundary(renderObject);
-      if (boundary == null) {
+      final renderView = renderViews.first;
+      final layer = renderView.debugLayer;
+      if (layer == null || layer is! OffsetLayer) {
         completer.complete(jsonEncode({
-          'error': 'no_repaint_boundary',
-          'message':
-              'Could not find a RenderRepaintBoundary in the render tree.',
+          'error': 'no_layer',
+          'message': 'Root render view has no OffsetLayer.',
         }));
         return;
       }
 
-      final result = await _captureRenderObject(boundary);
-      completer.complete(result);
+      final size = renderView.size;
+      final image = await layer.toImage(
+        Rect.fromLTWH(0, 0, size.width, size.height),
+        pixelRatio: 1.0,
+      );
+      final byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
+      image.dispose();
+
+      if (byteData == null) {
+        completer.complete(jsonEncode({
+          'error': 'capture_failed',
+          'message': 'toByteData returned null.',
+        }));
+        return;
+      }
+
+      final base64Png = base64Encode(byteData.buffer.asUint8List());
+      completer.complete(jsonEncode({
+        'image': base64Png,
+        'width': size.width.toInt(),
+        'height': size.height.toInt(),
+        'format': 'png',
+      }));
     } on Exception catch (e) {
       completer.complete(jsonEncode({
         'error': 'capture_failed',
@@ -158,30 +172,15 @@ Future<String> _handleScreenWidget(
         return;
       }
 
-      // If the target itself is a RepaintBoundary, use it directly.
-      // Otherwise, find the nearest ancestor RepaintBoundary and capture
-      // with the target's bounds.
-      final boundary = targetRenderObject is RenderRepaintBoundary
-          ? targetRenderObject
-          : _findRepaintBoundaryAncestor(targetRenderObject);
-
-      if (boundary == null) {
-        // No ancestor boundary — try to capture using OffsetLayer.toImage
-        // directly from the target's layer.
-        final result = await _captureViaLayer(targetRenderObject);
+      // Try capturing via RepaintBoundary first, then fall back to layer.
+      if (targetRenderObject is RenderRepaintBoundary) {
+        final result = await _captureRenderObject(targetRenderObject);
         completer.complete(result);
         return;
       }
 
-      // If the boundary IS the target, capture the whole thing.
-      if (identical(boundary, targetRenderObject)) {
-        final result = await _captureRenderObject(boundary);
-        completer.complete(result);
-        return;
-      }
-
-      // The boundary is an ancestor — capture just the target's region.
-      final result = await _captureRenderObject(boundary);
+      // Try the layer approach — works for most widgets.
+      final result = await _captureViaLayer(targetRenderObject);
       completer.complete(result);
     } on Exception catch (e) {
       completer.complete(jsonEncode({
@@ -198,36 +197,6 @@ Future<String> _handleScreenWidget(
 // ---------------------------------------------------------------------------
 // Shared helpers
 // ---------------------------------------------------------------------------
-
-/// Finds the root [RenderRepaintBoundary] by walking up the render tree.
-RenderRepaintBoundary? _findRepaintBoundary(RenderObject renderObject) {
-  RenderRepaintBoundary? boundary;
-  RenderObject? current = renderObject;
-
-  // Walk up to find the topmost RepaintBoundary.
-  while (current != null) {
-    if (current is RenderRepaintBoundary) {
-      boundary = current;
-    }
-    current = current.parent;
-  }
-
-  return boundary;
-}
-
-/// Finds the nearest ancestor [RenderRepaintBoundary] above [renderObject].
-RenderRepaintBoundary? _findRepaintBoundaryAncestor(
-  RenderObject renderObject,
-) {
-  RenderObject? current = renderObject.parent;
-  while (current != null) {
-    if (current is RenderRepaintBoundary) {
-      return current;
-    }
-    current = current.parent;
-  }
-  return null;
-}
 
 /// Walks the [Element] tree to find a widget whose [runtimeType.toString()]
 /// matches [widgetName], then returns its [RenderObject].
