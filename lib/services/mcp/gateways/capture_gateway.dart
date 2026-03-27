@@ -24,21 +24,35 @@ import 'package:flutter/widgets.dart';
 // Public entry point
 // ---------------------------------------------------------------------------
 
+/// Default pixel ratio for captures.
+///
+/// Lower values produce smaller images (fewer tokens for LLM consumption).
+/// 0.5 = half resolution = ~25% of the pixel count = ~25% base64 size.
+const _kDefaultPixelRatio = 0.5;
+
 /// Handles the `capture` gateway tool call.
 ///
 /// Dispatches to the appropriate command handler based on `args['command']`.
 /// The [contextCallback] is invoked fresh on every call to ensure current
 /// state.
+///
+/// All capture commands accept an optional `scale` arg (0.1–1.0) to control
+/// the output resolution. Lower values produce smaller images.
 Future<String> handleCapture({
   required Map<String, dynamic> args,
   required BuildContext? Function() contextCallback,
 }) async {
   final command = args['command'] as String?;
   final commandArgs = args['args'] as Map<String, dynamic>? ?? const {};
+  // Parse optional scale factor from args.
+  final scaleArg = commandArgs['scale'];
+  final pixelRatio = (scaleArg is num)
+      ? scaleArg.toDouble().clamp(0.1, 1.0)
+      : _kDefaultPixelRatio;
 
   return switch (command) {
-    'screen' => _handleScreen(contextCallback),
-    'screen_widget' => _handleScreenWidget(commandArgs, contextCallback),
+    'screen' => _handleScreen(contextCallback, pixelRatio),
+    'screen_widget' => _handleScreenWidget(commandArgs, contextCallback, pixelRatio),
     _ => jsonEncode({
         'error': 'unknown_command',
         'command': command,
@@ -58,6 +72,7 @@ Future<String> handleCapture({
 /// [Completer] + [WidgetsBinding.instance.addPostFrameCallback].
 Future<String> _handleScreen(
   BuildContext? Function() contextCallback,
+  double pixelRatio,
 ) async {
   final completer = Completer<String>();
 
@@ -88,7 +103,7 @@ Future<String> _handleScreen(
       final size = renderView.size;
       final image = await layer.toImage(
         Rect.fromLTWH(0, 0, size.width, size.height),
-        pixelRatio: 1.0,
+        pixelRatio: pixelRatio,
       );
       final byteData =
           await image.toByteData(format: ui.ImageByteFormat.png);
@@ -134,6 +149,7 @@ Future<String> _handleScreen(
 Future<String> _handleScreenWidget(
   Map<String, dynamic> args,
   BuildContext? Function() contextCallback,
+  double pixelRatio,
 ) async {
   final widgetName = args['widget'] as String?;
   if (widgetName == null || widgetName.isEmpty) {
@@ -174,13 +190,13 @@ Future<String> _handleScreenWidget(
 
       // Try capturing via RepaintBoundary first, then fall back to layer.
       if (targetRenderObject is RenderRepaintBoundary) {
-        final result = await _captureRenderObject(targetRenderObject);
+        final result = await _captureRenderObject(targetRenderObject, pixelRatio);
         completer.complete(result);
         return;
       }
 
       // Try the layer approach — works for most widgets.
-      final result = await _captureViaLayer(targetRenderObject);
+      final result = await _captureViaLayer(targetRenderObject, pixelRatio);
       completer.complete(result);
     } on Exception catch (e) {
       completer.complete(jsonEncode({
@@ -219,8 +235,8 @@ RenderObject? _findWidgetRenderObject(Element root, String widgetName) {
 /// Captures a [RenderRepaintBoundary] as a base64-encoded PNG.
 ///
 /// Returns a JSON string with `{image, width, height, format}`.
-Future<String> _captureRenderObject(RenderRepaintBoundary boundary) async {
-  final image = await boundary.toImage(pixelRatio: 1.0);
+Future<String> _captureRenderObject(RenderRepaintBoundary boundary, [double pixelRatio = _kDefaultPixelRatio]) async {
+  final image = await boundary.toImage(pixelRatio: pixelRatio);
   final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
   image.dispose();
 
@@ -243,7 +259,7 @@ Future<String> _captureRenderObject(RenderRepaintBoundary boundary) async {
 
 /// Fallback capture via [OffsetLayer.toImage] when no RepaintBoundary wraps
 /// the target widget.
-Future<String> _captureViaLayer(RenderObject renderObject) async {
+Future<String> _captureViaLayer(RenderObject renderObject, [double pixelRatio = _kDefaultPixelRatio]) async {
   final layer = renderObject.debugLayer;
   if (layer == null || layer is! OffsetLayer) {
     return jsonEncode({
@@ -254,7 +270,7 @@ Future<String> _captureViaLayer(RenderObject renderObject) async {
   }
 
   final bounds = renderObject.paintBounds;
-  final image = await layer.toImage(bounds, pixelRatio: 1.0);
+  final image = await layer.toImage(bounds, pixelRatio: pixelRatio);
   final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
   image.dispose();
 
