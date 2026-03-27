@@ -100,6 +100,99 @@ lib/
 | Server 500 on `/api/projects` | Missing columns in V2 Postgres | Apply pending migrations: `ALTER TABLE project ADD COLUMN ...` |
 | WebSocket retry spam | ws/token failing due to auth or missing project | Fix auth first; WebSocket connects after project selection |
 
+## Embedded Dev MCP Server (qdexcode-devtools)
+
+The app includes an embedded MCP server for development that gives Claude Code direct access to live app state. It starts automatically in **debug mode only** on `localhost:9731` and is auto-discovered via `.mcp.json`.
+
+### Architecture
+
+- Built with `dart_mcp` SDK (`FastMCP` class) + HTTP+SSE transport (copied from magnet-terminal)
+- 4 gateway tools, 14 commands — gateway pattern routes `{command, args}` internally
+- Provider callbacks (`ProviderContainer`, `GoRouter`, `Dio`, `BuildContext`) called fresh on every tool invocation — never cached
+- All handlers return `jsonEncode({...})`, never throw — errors returned as `{error: 'message'}` in JSON body
+- Null values stripped from JSON-RPC responses (required for Claude Code compatibility)
+- `Future.microtask()` used for UI thread dispatch (NOT `addPostFrameCallback` — deadlocks when app is idle)
+
+### Key Files
+
+| File | Purpose |
+|---|---|
+| `lib/services/devtools_server.dart` | Lifecycle manager — start/stop, port 9731, provider callbacks |
+| `lib/services/mcp/http_transport.dart` | HTTP+SSE transport (copied from magnet-terminal — do NOT rewrite) |
+| `lib/services/mcp/gateway_registry.dart` | Registers 4 gateway tools with FastMCP, `GatewayCallbacks` class |
+| `lib/services/mcp/gateways/inspect_gateway.dart` | Read-only state queries (5 commands) |
+| `lib/services/mcp/gateways/capture_gateway.dart` | Screenshots as base64 PNG (2 commands) |
+| `lib/services/mcp/gateways/action_gateway.dart` | Mutate app state (4 commands) |
+| `lib/services/mcp/gateways/server_gateway.dart` | Meta/health/discovery (3 commands) |
+| `lib/services/mcp/provider_map.dart` | Shared provider name → ref registry |
+| `lib/services/mcp/network_log_buffer.dart` | Ring buffer (50 entries) for Dio request/response logging |
+| `lib/services/mcp/network_log_interceptor.dart` | Dio interceptor that feeds NetworkLogBuffer |
+
+### Gateway Commands
+
+**inspect** — Read-only state inspection
+
+| Command | Args | Returns |
+|---|---|---|
+| `provider_state` | `{provider: "authProvider"}` or `{list: true}` | Provider value as JSON, or list of all provider names |
+| `network_log` | `{limit: 10}`, `{filter: "error"}`, `{filter: "/api/projects"}` | Recent Dio requests with method, URL, status, duration (auth headers redacted) |
+| `widget_tree` | `{depth: 3}`, `{search: "ProjectSelector"}` | Clean widget hierarchy (framework internals filtered out) |
+| `route_state` | `{}` | Current route, auth state, selected project |
+| `panel_layout` | `{}` | Panel widths, active tab, theme, window size |
+
+**capture** — Visual output (base64 PNG)
+
+| Command | Args | Returns |
+|---|---|---|
+| `screen` | `{}` or `{scale: 0.3}` | Full app screenshot (default 0.5x resolution for token efficiency) |
+| `screen_widget` | `{widget: "DashboardPage"}` or `{widget: "DashboardPage", scale: 0.3}` | Specific widget capture |
+
+**action** — Mutate app state
+
+| Command | Args | Returns |
+|---|---|---|
+| `navigate` | `{route: "/"}` | Navigate via GoRouter |
+| `switch_tab` | `{tab: "terminal"}` | Switch workspace tab (dashboard/terminal/editor/settings) |
+| `invalidate` | `{provider: "projectListProvider"}` or `{provider: "all"}` | Force-refresh provider(s) |
+| `logout` | `{}` | Clear auth and return to login |
+
+**server** — Meta/discovery
+
+| Command | Args | Returns |
+|---|---|---|
+| `health` | `{}` | Live auth state, selected project, server status |
+| `list_commands` | `{}` or `{gateway: "inspect"}` | All gateways/commands with descriptions and arg schemas |
+| `status` | `{}` | Uptime, connected clients, network log stats, provider counts |
+
+### Common Debugging Workflows
+
+**"Why is the API call failing?"**
+```
+inspect(command: "network_log", args: {filter: "error"})
+```
+
+**"What's the auth state?"**
+```
+inspect(command: "provider_state", args: {provider: "authProvider"})
+```
+
+**"What does the app look like right now?"**
+```
+capture(command: "screen", args: {scale: 0.3})
+```
+
+**"Force refresh project data"**
+```
+action(command: "invalidate", args: {provider: "projectListProvider"})
+```
+
+### Important Notes
+
+- The `http_transport.dart` is copied from magnet-terminal and battle-tested — do NOT rewrite it
+- Captures default to 0.5x resolution to save tokens. Use `scale: 0.3` for quick checks, `scale: 1.0` for full detail
+- The `CenterPanel` watches `activeTabStateProvider` (not local state) so `switch_tab` works visually
+- `.mcp.json` is in `.gitignore` (localhost-specific)
+
 ## qdexcode MCP Tools
 
 This project is indexed by **qdexcode**. Use MCP tools for code navigation:
