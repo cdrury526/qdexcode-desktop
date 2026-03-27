@@ -1,188 +1,116 @@
-# qdexcode MCP Tools
+# qdexcode-desktop
 
-This project is indexed by **qdexcode**. Use the MCP tools below for code navigation, search, and exploration. These replace raw grep/find with richer results — symbol definitions, call graphs, impact analysis, and semantic search.
+Flutter desktop app (macOS) for the qdexcode code intelligence platform. Standalone native app with filesystem access, git integration, terminal, and full UI.
 
-## Gateways
+## Architecture
 
-All commands go through gateway tools. Use `command` to select the operation and `args` for parameters.
+- **Framework:** Flutter 3.x with Riverpod 3 (codegen) for state management
+- **Backend:** qdexcode-cloud (Next.js on Cloudflare Workers) — all API calls go through `https://v2.chrisdrury.com`
+- **Auth:** GitHub OAuth device flow (RFC 8628) — NOT cookie-based sessions
+- **Database:** Postgres V2 (`qdexcode_v2`) on VPS, accessed via Cloudflare Hyperdrive + Access tunnel
+- **Realtime:** WebSocket to pg-bridge via `wss://pg-bridge.chrisdrury.com/ws`
+- **Models:** Freezed + json_serializable for immutable data classes
 
-| Gateway | Purpose |
-|---|---|
-| `code` | Symbol lookup, call graph navigation, module exploration |
-| `search` | Full-text search, regex search, semantic search, file listing |
-| `project` | Project stats, module breakdown, recent changes |
+## Key Patterns
 
-## Getting Oriented
+### API Response Format
 
-Start every session by understanding the project:
+The qdexcode-cloud API returns **camelCase** JSON keys (Drizzle ORM default). Flutter models must match — do NOT use `@JsonKey(name: 'snake_case')` annotations. The `Project` model, for example, uses `organizationId` not `organization_id`.
 
+### Authentication
+
+- Desktop app uses **Bearer token** auth, NOT cookies
+- Token stored in macOS Keychain via `flutter_secure_storage` (requires Keychain Sharing entitlement in Xcode)
+- `FlutterSecureStorage` must use `MacOsOptions(useDataProtectionKeyChain: true)`
+- Session validation uses `GET /api/auth/me` (supports Bearer), NOT `/api/auth/session` (cookie-only)
+- The qdexcode-cloud Next.js middleware passes Bearer token requests through without redirect
+
+### Dio HTTP Client
+
+- Responses from list endpoints may come as `String` (HTML redirect) if auth fails
+- Always use `dio.get<dynamic>()` and check `raw is List` before casting — never use `dio.get<List<dynamic>>()` directly
+- The `apiClientProvider` interceptor reads the Bearer token from secure storage on every request
+
+### macOS Entitlements
+
+Both `DebugProfile.entitlements` and `Release.entitlements` need:
+- `com.apple.security.app-sandbox` — required for App Store
+- `com.apple.security.network.client` — outgoing HTTP/WebSocket
+- `com.apple.security.network.server` — incoming (for terminal PTY)
+- `keychain-access-groups` — required for `flutter_secure_storage` (needs Xcode code signing)
+
+### Code Generation
+
+After modifying any `@freezed` or `@riverpod` annotated class:
 ```
-project(command: "overview")                                    → scale, modules, key types, hot spots
-code(command: "module_context", args: {module_path: "src"})     → drill into a directory
-project(command: "tasks")                                       → discover build/test/lint targets
-```
-
-## Code Gateway
-
-### extract — Deep-dive a symbol
-
-Definition, source code, callers, and callees in one call. **Use this before modifying any function.**
-
-```
-code(command: "extract", args: {symbol: "functionName"})
-code(command: "extract", args: {symbol: "functionName", include_source: true})
-```
-
-### module_context — Explore a directory
-
-File count, symbols, language stats, inbound callers, outbound dependencies.
-
-```
-code(command: "module_context", args: {module_path: "src/components"})
-code(command: "module_context", args: {module_path: "internal/api", limit: 100})
-```
-
-### symbol — Exact symbol lookup
-
-Find a symbol by exact name. Returns file path, line number, kind, and signature.
-
-```
-code(command: "symbol", args: {name: "MyComponent"})
+dart run build_runner build --delete-conflicting-outputs
 ```
 
-### resolve — Fuzzy symbol search
-
-Partial or fuzzy name matching when you don't know the exact name.
+## Project Structure
 
 ```
-code(command: "resolve", args: {name: "MyComp", limit: 10})
+lib/
+├── app.dart                    # Root app widget with splash screen
+├── main.dart                   # Entry point with error handler init
+├── core/
+│   ├── api/api_client.dart     # Dio instance with Bearer token interceptor
+│   ├── auth/                   # OAuth device flow, auth provider, login page
+│   ├── error/                  # Crash logger, error handler, error widget
+│   ├── models/                 # Freezed data models (Project, User, etc.)
+│   ├── realtime/               # WebSocket connection, events, connection badge
+│   ├── router/app_router.dart  # GoRouter with auth redirects + onboarding
+│   ├── state/                  # Window state persistence
+│   ├── theme/                  # App theme + theme toggle provider
+│   └── widgets/                # Splash screen, context menu components
+├── features/
+│   ├── dashboard/              # Stats cards, charts (fl_chart), indexing progress
+│   ├── file_tree/              # Lazy-loading file tree with FS watcher
+│   ├── git/                    # Git status panel (git CLI via dart:io)
+│   ├── onboarding/             # First-launch 3-step onboarding flow
+│   ├── plans/                  # Plan explorer with phase tree + task detail
+│   ├── projects/               # Project selector, add project dialog, GitHub repo picker
+│   ├── settings/               # Settings page with 5 sub-tabs
+│   ├── shell/                  # 3-panel resizable layout (multi_split_view)
+│   └── terminal/               # dart_pty + dart_xterm terminal tabs
 ```
 
-### callers — Who calls this?
+## Related Projects
 
-All incoming call sites for a symbol.
+- **qdexcode-cloud** (`/Users/chrisdrury/projects/qdexcode-cloud`) — Next.js backend on Cloudflare Workers
+  - Project ID: `7a1e6975-827a-4344-8490-ec258cdaf3bc`
+  - API endpoints the desktop app calls: `/api/auth/me`, `/api/auth/device/*`, `/api/projects`, `/api/plans`, `/api/stats`, `/api/github/repos`, `/api/ws/token`
+  - Middleware at `src/middleware.ts` must allow Bearer token requests through
 
-```
-code(command: "callers", args: {symbol: "fetchData"})
-```
+## Infrastructure
 
-### callees — What does this call?
+- **VPS:** `72.61.65.4` (SSH: `root@72.61.65.4`)
+- **V2 Postgres:** `qdex-postgres-v2` container on port 5433 (user: `qdexcloud`, db: `qdexcode_v2`)
+- **V1 Postgres:** `qdex-postgres` container on port 5432 (user: `qdexcode`, db: `qdexcode`) — separate, do not mix
+- **Hyperdrive:** ID `1e9ce6f5f359419981d7a536036acb76`, connects via Cloudflare Access tunnel to `postgres-v2.chrisdrury.com`
+- **Cloudflare Tunnel:** config at `/etc/cloudflared/config.yml` on VPS — `postgres-v2.chrisdrury.com → tcp://localhost:5433`
+- **Deploy cloud:** `cd qdexcode-cloud && npm -w apps/web run deploy`
 
-All outgoing calls from a symbol.
+## Common Issues
 
-```
-code(command: "callees", args: {symbol: "fetchData"})
-```
+| Symptom | Cause | Fix |
+|---|---|---|
+| `type 'String' is not a subtype of type 'List<dynamic>?'` | API returned HTML (auth redirect) instead of JSON | Check middleware allows Bearer tokens; use `dio.get<dynamic>()` |
+| `PlatformException -34018 entitlement` | Missing Keychain Sharing entitlement | Open Xcode, enable Keychain Sharing capability with code signing |
+| `Directionality widget ancestor` | Widget rendered outside MaterialApp | Wrap with `Directionality(textDirection: TextDirection.ltr)` |
+| Server 500 on `/api/projects` | Missing columns in V2 Postgres | Apply pending migrations: `ALTER TABLE project ADD COLUMN ...` |
+| WebSocket retry spam | ws/token failing due to auth or missing project | Fix auth first; WebSocket connects after project selection |
 
-### what_breaks_if — Impact analysis
+## qdexcode MCP Tools
 
-Before changing a symbol's signature or deleting it, check what breaks.
-
-```
-code(command: "what_breaks_if", args: {symbol: "fetchData", change_type: "change-signature"})
-code(command: "what_breaks_if", args: {symbol: "fetchData", change_type: "delete", max_depth: 3})
-```
-
-`change_type`: `"delete"` | `"change-signature"` | `"change-behavior"`
-
-### graph_path — Trace call path between two symbols
-
-```
-code(command: "graph_path", args: {from: "handleRequest", to: "saveToDatabase", max_depth: 5})
-```
-
-## Search Gateway
-
-### search — Unified search
-
-Combines symbol name matching with semantic vector similarity.
-
-```
-search(command: "search", args: {query: "authentication"})
-search(command: "search", args: {query: "authentication", include_source: true, limit: 10})
-```
-
-### content — Full-text search
-
-Case-insensitive substring match across all indexed file contents.
-
-```
-search(command: "content", args: {query: "TODO", limit: 50})
-```
-
-### grep — Regex search
-
-POSIX regex with optional glob filtering.
-
-```
-search(command: "grep", args: {pattern: "func.*New", glob: "*.go"})
-search(command: "grep", args: {pattern: "import.*react", glob: "*.tsx"})
-```
-
-### files — List indexed files
-
-Filter by language and/or path pattern.
-
-```
-search(command: "files", args: {language: "TypeScript", pattern: "src/**"})
-search(command: "files", args: {language: "Go", limit: 200})
-```
-
-### context — RAG retrieval
-
-Semantic search that returns symbol info, source code, callers, callees, and relevance scores. Best for natural-language questions about the codebase.
-
-```
-search(command: "context", args: {query: "how does authentication work", limit: 5})
-```
-
-## Project Gateway
-
-### overview — Project stats
-
-Scale, modules, key types, entry points, hot spots. Use `sections` to pick what you need.
-
-```
-project(command: "overview")
-project(command: "overview", args: {sections: ["modules", "key_types"]})
-project(command: "overview", args: {sections: ["all"]})
-```
-
-Sections: `scale`, `modules`, `key_types`, `hot_spots`, `entry_points`
-
-### summary / snapshot — Quick stats
-
-```
-project(command: "summary")    → lightweight overview
-project(command: "snapshot")   → raw stats only
-```
-
-### changes — Recently modified files
-
-```
-project(command: "changes", args: {since: "24h"})
-project(command: "changes", args: {since: "7d"})
-```
-
-### tasks — Build/test/lint targets
-
-Discovers Makefile targets, package.json scripts, CI configs.
-
-```
-project(command: "tasks")
-```
-
-## When to Use What
+This project is indexed by **qdexcode**. Use MCP tools for code navigation:
 
 | I need to... | Command |
 |---|---|
 | Understand a function before editing | `code → extract` |
-| Explore a directory I'm unfamiliar with | `code → module_context` |
+| Explore a directory | `code → module_context` |
 | Find where something is called | `code → callers` |
 | Check what breaks if I change something | `code → what_breaks_if` |
-| Trace how A connects to B | `code → graph_path` |
 | Search for a pattern in code | `search → grep` |
 | Find files by language or path | `search → files` |
 | Ask a natural-language question about code | `search → context` |
-| Get project overview and structure | `project → overview` |
-| Find build/test commands | `project → tasks` |
+| Get project overview | `project → overview` |
